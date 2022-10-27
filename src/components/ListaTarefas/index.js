@@ -7,13 +7,16 @@ import {
   TaskInput,
   AddTaskButton,
   RemoveButton,
-  LinhaHorizontal
+  LinhaHorizontal,
+  Excluidos
 } from "./styled";
+import {Lista} from "./ListaTarefas"
 import bin from "../../assets/bin.png";
 
 export function ListaTarefas() {
   const [lista, setLista] = useState(["Fazer exercícios", "Estudar React"]);
   const [novaTarefa, setNovaTarefa] = useState("");
+  const [listaExcluidas, setListaExcluidas] = useState(["Teste"]);
 
   const onChangeTarefa = (event) => {
     setNovaTarefa(event.target.value);
@@ -27,8 +30,21 @@ export function ListaTarefas() {
 
   const removeTarefa = (tarefa) => {
     const listaFiltrada = lista.filter((item) => item !== tarefa);
+    const listaEx = lista.filter((item) => item === tarefa);
+        
+    
     setLista(listaFiltrada);
+
+    const novaListaExcluida = [...listaExcluidas, listaEx];
+    setListaExcluidas(novaListaExcluida);
+    
   };
+
+  const onKeyPressed = (event) =>{
+    if(event.key == "Enter"){
+      adicionaTarefa()
+    }
+  }
 
   return (
     <ListaTarefasContainer>
@@ -37,6 +53,7 @@ export function ListaTarefas() {
           placeholder="Digite aqui uma tarefa"
           value={novaTarefa}
           onChange={onChangeTarefa}
+          onKeyDown={onKeyPressed}
         />
         <AddTaskButton onClick={adicionaTarefa}>Adicionar</AddTaskButton>
       </InputContainer>
@@ -55,6 +72,18 @@ export function ListaTarefas() {
         </ul>
       </ListaContainer>
       <LinhaHorizontal/>
+      <Lista listaExcluidas={listaExcluidas}/>
+      {/* <ListaContainer>
+        <ul>
+          {listaExcluidas.map((tarefa, index) => {
+            return (
+              <Excluidos key={index}>
+                <p><s>{tarefa}</s></p>
+              </Excluidos>
+            );
+          })}
+        </ul>
+      </ListaContainer> */}
     </ListaTarefasContainer>
   );
 }
